@@ -1,23 +1,85 @@
 <?php
+//ini_set('display_errors', 1);     //uncomment this line for debugging
 
-$d = new DateTime();
-if($d->format('w')=='0')
-{
-	$d->modify('+1 day');
-} elseif($d->format('w')=='6') {
-	$d->modify('+2 day');
+const VISITOR_FILE_NAME = 'visitors.txt';
+
+$dateTime = new CollegeDay(); //class that extends DateTime defined at the end of the file
+
+$dateTime -> changeWeekendsToMonday();
+
+$dateTime -> changeDateAfter6pm();
+
+$anc = $dateTime->getAnchor();
+
+//try to open the visitor counter file
+try {
+    $myfile = fopen(VISITOR_FILE_NAME, "r");
+} catch (Exception $e) {
+    $myfile = fopen(VISITOR_FILE_NAME, "w") or die('Sretan Božić :)');
+    fwrite($myfile, '0');
 }
-$d=$d->format('Y-m-d');
 
-$myfile = fopen("visitors.txt", "r");
-
-if(!$myfile) {
-$myfile = fopen("visitors.txt", "w") or die('2');
-fwrite($myfile, '0');
+//if the visitor counter file doesn't exist create a new file
+if (!$myfile) {
+    $myfile = fopen(VISITOR_FILE_NAME, "w") or die('Error :(');
+    fwrite($myfile, '0');
 }
-$counter=fgets($myfile);
-$counter+=1;
-echo $counter;
-$myfile = fopen("visitors.txt", "w") or die('3');
+
+
+//every time the script is run that is a new visit to the site so we increase the number of visits inside the file by one
+$counter = fgets($myfile);
+$counter += 1;
+$myfile = fopen(VISITOR_FILE_NAME, "w") or die('here1');
 fwrite($myfile, $counter);
-header("Location: http://www.etfos.unios.hr/studenti/raspored-nastave-i-ispita/$d/2-21#anc");
+
+
+header("Location: http://www.etfos.unios.hr/studenti/raspored-nastave-i-ispita/{$dateTime->format('Y-m-d')}/2-21#$anc");
+
+class CollegeDay extends DateTime
+{
+    public function changeWeekendsToMonday()
+    {
+
+        if ($this->format('w') == '0') {
+            $this->modify('+1 day');
+        } elseif ($this->format('w') == '6') {
+            $this->modify('+2 day');
+        }
+
+        $this->setTime(0, 0); //to ensure this function works without interference with other functions we set the time to zero
+        return $this;
+    }
+
+    public function getAnchor()
+    {
+        switch ($this->format('w')) {
+            case '1':
+                $anchor = 'Pon';
+                break;
+            case '2':
+                $anchor = 'Uto';
+                break;
+            case '3':
+                $anchor = 'Sri';
+                break;
+            case '4':
+                $anchor = 'Cet';
+                break;
+            case '5':
+                $anchor = 'Pet';
+                break;
+        }
+
+        return $anchor;
+    }
+
+    public function changeDateAfter6pm()
+    {
+
+        if ($this->format('H') > 17) {
+            $this->modify('+1 day');
+        }
+
+        return $this;
+    }
+}
