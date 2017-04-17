@@ -9,27 +9,19 @@ $dateTime -> changeWeekendsToMonday();
 
 $dateTime -> changeDateAfter6pm();
 
-$anc = $dateTime->getAnchor();
+$anc = $dateTime -> getAnchor();
 
-//try to open the visitor counter file
-try {
-    $myfile = fopen(VISITOR_FILE_NAME, "r");
-} catch (Exception $e) {
-    $myfile = fopen(VISITOR_FILE_NAME, "w") or die('Sretan Božić :)');
-    fwrite($myfile, '0');
-}
+if ( !file_exists(VISITOR_FILE_NAME)) {
+	$myfile = fopen(VISITOR_FILE_NAME, "w");
+	 fwrite($myfile, '0');
 
-//if the visitor counter file doesn't exist create a new file
-if (!$myfile) {
-    $myfile = fopen(VISITOR_FILE_NAME, "w") or die('Error :(');
-    fwrite($myfile, '0');
 }
 
 
 //every time the script is run that is a new visit to the site so we increase the number of visits inside the file by one
 $counter = fgets($myfile);
 $counter += 1;
-$myfile = fopen(VISITOR_FILE_NAME, "w") or die('here1');
+$myfile = fopen(VISITOR_FILE_NAME, "w");
 fwrite($myfile, $counter);
 
 
