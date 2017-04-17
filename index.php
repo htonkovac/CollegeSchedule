@@ -12,18 +12,18 @@ $dateTime->changeDateAfter6pm();
 $anc = $dateTime->getAnchor();
 
 if (!file_exists(VISITOR_FILE_NAME)) {
-    $myfile = fopen(VISITOR_FILE_NAME, "w");
-    fwrite($myfile, '0');
+    $myFile = fopen(VISITOR_FILE_NAME, "w");
+    fwrite($myFile, '0');
 
 } else {
-    $myfile = fopen(VISITOR_FILE_NAME, 'r');
+    $myFile = fopen(VISITOR_FILE_NAME, 'r');
 }
 
 //every time the script is run that is a new visit to the site so we increase the number of visits inside the file by one
-$counter = fgets($myfile);
+$counter = fgets($myFile);
 $counter += 1;
-$myfile = fopen(VISITOR_FILE_NAME, "w");
-fwrite($myfile, $counter);
+$myFile = fopen(VISITOR_FILE_NAME, "w");
+fwrite($myFile, $counter);
 
 
 header("Location: http://www.etfos.unios.hr/studenti/raspored-nastave-i-ispita/{$dateTime->format('Y-m-d')}/2-21#$anc");
@@ -45,6 +45,8 @@ class CollegeDay extends DateTime
 
     public function getAnchor()
     {
+        $anchor = 'anc';
+
         switch ($this->format('w')) {
             case '1':
                 $anchor = 'Pon';
