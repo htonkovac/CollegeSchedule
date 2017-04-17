@@ -5,15 +5,15 @@ const VISITOR_FILE_NAME = 'visitors.txt';
 
 $dateTime = new CollegeDay(); //class that extends DateTime defined at the end of the file
 
-$dateTime -> changeWeekendsToMonday();
+$dateTime->changeWeekendsToMonday();
 
-$dateTime -> changeDateAfter6pm();
+$dateTime->changeDateAfter6pm();
 
-$anc = $dateTime -> getAnchor();
+$anc = $dateTime->getAnchor();
 
-if ( !file_exists(VISITOR_FILE_NAME)) {
-	$myfile = fopen(VISITOR_FILE_NAME, "w");
-	 fwrite($myfile, '0');
+if (!file_exists(VISITOR_FILE_NAME)) {
+    $myfile = fopen(VISITOR_FILE_NAME, "w");
+    fwrite($myfile, '0');
 
 } else {
     $myfile = fopen(VISITOR_FILE_NAME, 'r');
