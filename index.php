@@ -15,8 +15,9 @@ if ( !file_exists(VISITOR_FILE_NAME)) {
 	$myfile = fopen(VISITOR_FILE_NAME, "w");
 	 fwrite($myfile, '0');
 
+} else {
+    $myfile = fopen(VISITOR_FILE_NAME, 'r');
 }
-
 
 //every time the script is run that is a new visit to the site so we increase the number of visits inside the file by one
 $counter = fgets($myfile);
